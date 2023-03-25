@@ -18,9 +18,15 @@ class Snake(arcade.Sprite):
     def draw(self):
         arcade.draw_rectangle_filled(
             self.center_x, self.center_y, self.width, self.height, self.color)
-        for part in self.body:
-            arcade.draw_rectangle_filled(
-                part['x'], part['y'], self.width, self.height, self.color)
+        if self.score % 2 == 0:
+            for part in self.body:
+                arcade.draw_rectangle_filled(
+                    part['x'], part['y'], self.width, self.height, arcade.color.DARK_GREEN)
+
+        elif self.score % 2 == 1:
+            for part in self.body:
+                arcade.draw_rectangle_filled(
+                    part['x'], part['y'], self.width, self.height, arcade.color.GREEN)
 
     def move(self):
         self.center_x += self.change_x * self.speed
@@ -29,6 +35,6 @@ class Snake(arcade.Sprite):
         if len(self.body) > self.score + 1:
             self.body.pop(0)
 
-    def eat(self, food):
-        del food
+    def eat(self, apple):
+        del apple
         self.score += 1

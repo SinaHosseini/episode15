@@ -1,23 +1,37 @@
 import random
 import arcade
 from snake import Snake
-from fruite import Apple
+from fruit import Apple
+from fruit import Fruit
 
 
 class Game(arcade.Window):
     def __init__(self):
         super().__init__(width=480, height=480, title="Super Snake 🐍 V1")
         arcade.set_background_color(arcade.color.KHAKI)
-        self.food = Apple(self)
+        self.background = arcade.load_texture("GreenCheckeredGrassBoard.jpg")
+        self.apple = Apple(self)
         self.snake = Snake(self)
+        self.apple = Fruit(self)
+        self.status = "normal"
+        self.game_over_bg = arcade.load_texture(
+            "episode14\photo_2023-03-23_21-50-37.jpg")
 
     def on_draw(self):
         arcade.start_render()
-        self.food.draw()
-        self.snake.draw()
-        score_text = f"Score: {self.snake.score}"
-        arcade.draw_text(score_text, self.width - 100,
-                         20, arcade.color.WHITE, 15)
+
+        if self.status == "normal":
+            arcade.draw_lrwh_rectangle_textured(
+                0, 0, self.width, self.height, self.background)
+            self.apple.draw()
+            self.snake.draw()
+            score_text = f"Score: {self.snake.score}"
+            arcade.draw_text(score_text, self.width - 100,
+                             20, arcade.color.WHITE, 15)
+
+        elif self.status == "game over":
+            arcade.draw_lrwh_rectangle_textured(
+                0, 0, self.width, self.height, self.game_over_bg)
 
         arcade.finish_render()
 
@@ -41,9 +55,13 @@ class Game(arcade.Window):
     def on_update(self, delta_time):
         self.snake.move()
 
-        if arcade.check_for_collision(self.snake, self.food):
-            self.snake.eat(self.food)
-            self.food = Apple(self)
+        if arcade.check_for_collision(self.snake, self.apple):
+            self.snake.eat(self.apple)
+            self.apple = Apple(self)
+
+        if self.snake.score == -1:
+            self.status = "game over"
+            self.on_draw()
 
 
 if __name__ == "__main__":
