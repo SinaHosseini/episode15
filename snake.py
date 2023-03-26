@@ -38,8 +38,14 @@ class Snake(arcade.Sprite):
     def eat(self, game):
         if game.fruit_counter == "apple":
             del game.apple
+            del game.poop
             self.score += 1
 
         elif game.fruit_counter == "pear":
             del game.pear
             self.score += 2
+
+        elif game.fruit_counter == "poop":
+            del game.poop
+            del game.apple
+            self.score -= 1

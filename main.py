@@ -14,6 +14,7 @@ class Game(arcade.Window):
         self.apple = Apple(self)
         self.snake = Snake(self)
         self.pear = Pear(self)
+        self.poop = Shit(self)
         self.fruit_counter = "apple"
         self.status = "normal"
         self.game_over_bg = arcade.load_texture(
@@ -27,8 +28,10 @@ class Game(arcade.Window):
                 0, 0, self.width, self.height, self.background)
             self.apple.draw()
             self.snake.draw()
-            if random.randint(1, 6) == 6:
+            if self.snake.score % 5 == 0:
                 self.pear.draw()
+
+            self.poop.draw()
             score_text = f"Score: {self.snake.score}"
             arcade.draw_text(score_text, self.width - 100,
                              20, arcade.color.WHITE, 15)
@@ -63,12 +66,23 @@ class Game(arcade.Window):
             self.fruit_counter = "apple"
             self.snake.eat(self)
             self.apple = Apple(self)
-
+            self.poop = Shit(self)
 
         if arcade.check_for_collision(self.snake, self.pear):
             self.fruit_counter = "pear"
             self.snake.eat(self)
             self.pear = Pear(self)
+
+        if arcade.check_for_collision(self.snake, self.poop):
+            self.fruit_counter = "poop"
+            self.snake.eat(self)
+            self.poop = Shit(self)
+            self.apple = Apple(self)
+
+        # for body in self.snake.body:
+        #     if arcade.check_for_collision(self.snake, body):
+        #         self.status = "game over"
+        #         self.on_draw()
 
         if self.snake.score == -1:
             self.status = "game over"
