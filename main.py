@@ -2,7 +2,8 @@ import random
 import arcade
 from snake import Snake
 from fruit import Apple
-from fruit import Fruit
+from fruit import Pear
+from fruit import Shit
 
 
 class Game(arcade.Window):
@@ -12,7 +13,8 @@ class Game(arcade.Window):
         self.background = arcade.load_texture("GreenCheckeredGrassBoard.jpg")
         self.apple = Apple(self)
         self.snake = Snake(self)
-        self.apple = Fruit(self)
+        self.pear = Pear(self)
+        self.fruit_counter = "apple"
         self.status = "normal"
         self.game_over_bg = arcade.load_texture(
             "episode14\photo_2023-03-23_21-50-37.jpg")
@@ -25,6 +27,8 @@ class Game(arcade.Window):
                 0, 0, self.width, self.height, self.background)
             self.apple.draw()
             self.snake.draw()
+            if random.randint(1, 6) == 6:
+                self.pear.draw()
             score_text = f"Score: {self.snake.score}"
             arcade.draw_text(score_text, self.width - 100,
                              20, arcade.color.WHITE, 15)
@@ -56,8 +60,15 @@ class Game(arcade.Window):
         self.snake.move()
 
         if arcade.check_for_collision(self.snake, self.apple):
-            self.snake.eat(self.apple)
+            self.fruit_counter = "apple"
+            self.snake.eat(self)
             self.apple = Apple(self)
+
+
+        if arcade.check_for_collision(self.snake, self.pear):
+            self.fruit_counter = "pear"
+            self.snake.eat(self)
+            self.pear = Pear(self)
 
         if self.snake.score == -1:
             self.status = "game over"
